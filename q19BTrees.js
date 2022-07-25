@@ -1,4 +1,4 @@
-// LEVEL ORDER OF BINARY TREE
+// RIGHT SIDE VIEW OF TREE
 
 class TreeNode {
   constructor(value) {
@@ -27,16 +27,16 @@ class TreeNode {
   }
 }
 
-const tree = new TreeNode(3);
+const tree = new TreeNode(1);
 tree.insert([
-  6,
-  1,
-  9,
   2,
-  null,
+  3,
   4,
-  null,
   5,
+  null,
+  6,
+  null,
+  7,
   null,
   null,
   null,
@@ -47,21 +47,19 @@ tree.insert([
   null,
 ]);
 
-// ------- Our Solution -------
-const levelOrder = function (root) {
+// BFS SOLUTION
+const rightSideViewBFS = function (root) {
   if (!root) return [];
   const result = [];
-  const queue = [root];
+  let queue = [root];
 
   while (queue.length) {
-    const currentLevelValues = [];
     let length = queue.length,
-      count = 0;
+      count = 0,
+      currentNode;
 
     while (count < length) {
-      const currentNode = queue.shift();
-
-      currentLevelValues.push(currentNode.value);
+      currentNode = queue.shift();
 
       if (currentNode.left) {
         queue.push(currentNode.left);
@@ -74,10 +72,36 @@ const levelOrder = function (root) {
       count++;
     }
 
-    result.push(currentLevelValues);
+    result.push(currentNode.value);
   }
 
   return result;
 };
 
-console.log(levelOrder(tree));
+console.log(rightSideViewBFS(tree));
+
+// DFS SOLUTION
+
+const dfs = (node, currentLevel, result) => {
+  if (!node) return;
+  if (currentLevel >= result.length) {
+    result.push(node.value);
+  }
+
+  if (node.right) {
+    dfs(node.right, currentLevel + 1, result);
+  }
+
+  if (node.left) {
+    dfs(node.left, currentLevel + 1, result);
+  }
+};
+
+const rightSideViewDFS = function (root) {
+  const result = [];
+
+  dfs(root, 0, result);
+  return result;
+};
+
+console.log(rightSideViewDFS(tree));
